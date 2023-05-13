@@ -10,7 +10,7 @@
     "body-parser": "~1.15.0",
     "express": "~4.13.3",
     "express-x-hub": "^1.0.4",
-    "ws": "^8.4.2" // Add this line to include the ws dependency
+    "ws": "^8.4.2" 
   },
   "engines": {
     "node": "19.7.0"
