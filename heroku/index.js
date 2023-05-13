@@ -25,9 +25,10 @@ app.get('/', function(req, res) {
   res.send('<pre>' + JSON.stringify(received_updates, null, 2) + '</pre>');
 });
 
-app.get('/Init',function(res){
-        res.send('Hello');
+app.get('/init', function(req, res) {
+  res.json({"Message": "Initialized"});
 });
+
 
 app.get(['/facebook', '/instagram'], function(req, res) {
   if (
