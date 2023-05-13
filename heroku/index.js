@@ -16,8 +16,8 @@ const port = process.env.PORT || 5000;
 
 // Set up HTTPS server
 const server = https.createServer({
-  key: fs.readFileSync('/private.key'), // Replace with the path to your SSL/TLS private key file
-  cert: fs.readFileSync('/certifcate.csr'), // Replace with the path to your SSL/TLS certificate file
+  key: fs.readFileSync('https://github.com/AbhiramVAnand/graph-api-webhooks-samples/blob/main/heroku/private.key'), // Replace with the path to your SSL/TLS private key file
+  cert: fs.readFileSync('https://github.com/AbhiramVAnand/graph-api-webhooks-samples/blob/main/heroku/certifcate.csr'), // Replace with the path to your SSL/TLS certificate file
 }, app);
 
 app.use(xhub({ algorithm: 'sha1', secret: process.env.APP_SECRET }));
