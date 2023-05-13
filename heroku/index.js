@@ -5,23 +5,28 @@
  * This source code is licensed under the license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const bodyParser = require('body-parser');
+const fs = require('fs');
+const https = require('https');
 const express = require('express');
-const WebSocket = require('ws'); // Import the WebSocket library
-const app = express();
+const WebSocket = require('ws');
 const xhub = require('express-x-hub');
 
-app.set('port', (process.env.PORT || 5000));
-app.listen(app.get('port'));
+const app = express();
+const port = process.env.PORT || 5000;
+
+// Set up HTTPS server
+const server = https.createServer({
+  key: fs.readFileSync('/private.key'), // Replace with the path to your SSL/TLS private key file
+  cert: fs.readFileSync('/certifcate.csr'), // Replace with the path to your SSL/TLS certificate file
+}, app);
 
 app.use(xhub({ algorithm: 'sha1', secret: process.env.APP_SECRET }));
-app.use(bodyParser.json());
 
 const token = process.env.TOKEN || 'token';
 const received_updates = [];
 
 // Create a WebSocket server
-const wss = new WebSocket.Server({ noServer: true });
+const wss = new WebSocket.Server({ server });
 
 // Handle WebSocket connections
 wss.on('connection', function connection(ws) {
@@ -64,7 +69,7 @@ app.get('/', function(req, res) {
 });
 
 app.get('/init', function(req, res) {
-  res.json({"Message": "Initialized"});
+  res.json({ "Message": "Initialized" });
 });
 
 app.get(['/facebook', '/instagram'], function(req, res) {
@@ -101,11 +106,7 @@ app.post('/instagram', function(req, res) {
   res.sendStatus(200);
 });
 
-// Upgrade the initial HTTP request to a WebSocket connection
-app.on('upgrade', function upgrade(request, socket, head) {
-  wss.handleUpgrade(request, socket, head, function done(ws) {
-    wss.emit('connection', ws, request);
-  });
+server.listen(port, function() {
+  console.log(`Server is listening on port ${port}`);
 });
 
-app.listen();
